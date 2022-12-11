@@ -1,0 +1,83 @@
+version: '3.5'
+
+services:
+
+  db:
+    build:
+      context: ./Database
+      dockerfile: Dockerfile
+    container_name: postgres
+    restart: always
+    ports:
+      - '5433:5432'
+    env_file:
+      - db.env
+    volumes:
+      - './Database/init:/docker-entrypoint-initdb.d/'
+
+  pipe:
+    container_name: pipe
+    restart: always
+    build:
+      context: ./Pipe/
+      dockerfile: Dockerfile
+      args:
+        SSHPASS: ${BUS_PASS}
+        USER: ${BUS_USER}
+        SERVER: ${BUS_SERVER}
+    env_file:
+      - .env
+    ports:
+      - "3000:5002"
+    volumes:
+      - ./Pipe:/app
+
+  service:
+    container_name: services
+    restart: always
+    build:
+      context: ./Services/
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - SOCKET_HOST=pipe
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./Services:/usr/src/app
+    depends_on:
+      - "db"
+      - "pipe"
+
+  client:
+    container_name: clients
+    restart: always
+    build:
+      context: ./Clients/
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - SOCKET_HOST=pipe
+    ports:
+      - "5003:5002"
+    volumes:
+      - ./Clients:/usr/src/app
+    depends_on:
+      - "db"
+      - "service"
+      - "pipe"
+
+  ###################-PG_ADMIN-##########################
+  pgadmin:
+    image: "dpage/pgadmin4"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "81:80"
+    depends_on:
+      - db
+    logging:
+      driver: none
