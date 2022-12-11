@@ -11,7 +11,7 @@ from time import sleep
 
 class Login(Service):
     def __init__(self):
-        print("Servicio de login de vendedores")
+        print("Servicio de login")
         super().__init__("blogi")
         self.start_service(debug=True)
 
@@ -31,10 +31,15 @@ class Login(Service):
                     'id': user.id,
                     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
                 }, os.environ['SECRET_KEY'])
-                return token
+                var = {
+                    "token": token,
+                }
+                return str(var)
             else:
                 db.close()
-                return "Contraseña incorrecta"
+                return str({
+                    "error": "Contraseña incorrecta"
+                })
         except Exception as e:
             db.close()
             return str(e)

@@ -1,6 +1,6 @@
 from Class.Service import Service
 from Database.session import session
-from Database.models import Thing, to_dict
+from Database.models import Thing, to_dict, User
 import bcrypt
 import os
 import json
@@ -10,10 +10,10 @@ from time import sleep
 import uuid
 
 
-class getThings(Service):
+class getAllThings(Service):
     def __init__(self):
-        print("Servicio para obtener objetos")
-        super().__init__("blogo")
+        print("Servicio para obtener todos los objetos del admin")
+        super().__init__("blige")
         self.start_service(debug=True)
 
     def service_function(self, climsg):
@@ -25,24 +25,12 @@ class getThings(Service):
             token = climsg["token"]
             decoded_token = jwt.decode(
                 token, os.environ['SECRET_KEY'], algorithms=['HS256'])
-            option = climsg["option"]
 
-            if option == "1":
-                objects = db.query(Thing).all()
-            elif option == "2":
-                objects = db.query(Thing).filter(
-                    Thing.state == "lost").all()
-            elif option == "3":
-                objects = db.query(Thing).filter(
-                    Thing.state == "found").all()
-            elif option == "4":
-                objects = db.query(Thing).filter(
-                    Thing.state == "recovered").all()
-            else:
-                return "Opción no válida"
+            result = db.query(Thing).filter(
+                Thing.userId == decoded_token["id"]).all()
 
             arr = []
-            for row in objects:
+            for row in result:
                 arr.append(to_dict(row))
             return str(arr)
 
@@ -53,7 +41,7 @@ class getThings(Service):
 
 def main():
     try:
-        getThings()()
+        getAllThings()
     except Exception as e:
         print(e)
         sleep(30)

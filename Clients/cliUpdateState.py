@@ -4,16 +4,25 @@ import json
 import datetime
 
 
-def getThings():
-    print("Service: Get Things")
+def updateState():
+    print("Service: Update State")
 
     try:
         token = input("Ingrese token: ")
+        print("Obteniendo lista de objetos perdidos y encontrados... \n")
+        b = Client("blogo")
+        things = b.exec_client(debug=True, climsg=json.dumps({
+            "token": token
+        }))
+        print(things, "\n")
+
         try:
+            thing_id = input("Ingrese id del objeto: ")
             climsg = {
-                "token": token,
+                "thing_id": thing_id,
+                "token": token
             }
-            a = Client("blige")
+            a = Client("blugu")
             msg = a.exec_client(debug=True, climsg=json.dumps(climsg))
             print("###################################\n\n",
                   msg, "\n\n###################################")

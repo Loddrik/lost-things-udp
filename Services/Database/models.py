@@ -8,7 +8,7 @@ Base = declarative_base()
 
 
 class User(Base):
-    __tablename__ = 'User'
+    __tablename__ = 'users'
     id = Column(String(50), primary_key=True)
     email = Column(String(50), nullable=False)
     password = Column(String(90), nullable=False)
@@ -20,9 +20,9 @@ class User(Base):
 
 
 class Thing(Base):
-    __tablename__ = 'Thing'
+    __tablename__ = 'things'
     id = Column(String(50), primary_key=True)
-    userId = Column(String(50), ForeignKey('User.id'), nullable=False)
+    userId = Column(String(50), ForeignKey('users.id'), nullable=False)
     name = Column(String(50), nullable=False)
     state = Column(String(50), nullable=False)
     description = Column(String(100), nullable=False)
@@ -30,8 +30,9 @@ class Thing(Base):
     publishedDate = Column(DateTime, nullable=False)
     recoveredDate = Column(DateTime, nullable=True)
 
-    def __repr__(self):
-        return '< %r>' % self.id
+
+def __repr__(self):
+    return '< %r>' % self.id
 
 
 def to_dict(obj):

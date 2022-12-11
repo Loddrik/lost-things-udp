@@ -33,14 +33,15 @@ class Registro(Service):
                     faculty=faculty,
                     addres=climsg["address"],
                 )
+                var = {
+                    'id': usuario.id,
+                    'email': usuario.email,
+                    'facultad': usuario.faculty,
+                }
                 db.add(usuario)
                 db.commit()
                 db.close()
-                return {
-                    usuario.id,
-                    usuario.email,
-                    usuario.faculty,
-                }
+                return str(var)
             else:
                 db.close()
                 return "Usuario ya existe"

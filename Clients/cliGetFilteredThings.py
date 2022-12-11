@@ -4,16 +4,24 @@ import json
 import datetime
 
 
-def getThings():
-    print("Service: Get Things")
+def getFilteredThings():
+    print("Service: Filter Things by faculty and state")
 
     try:
-        token = input("Ingrese token: ")
+
+        state = input(
+            "Ingrese el estado del objeto (lost,found): ")
+        faculty = input("Ingrese la facultad del objeto: ")
+        if state != "lost" and state != "found":
+            print("Estado no válido, intente nuevamente")
+            pass
+
         try:
             climsg = {
-                "token": token,
+                "state": state,
+                "faculty": faculty
             }
-            a = Client("blige")
+            a = Client("blego")
             msg = a.exec_client(debug=True, climsg=json.dumps(climsg))
             print("###################################\n\n",
                   msg, "\n\n###################################")
