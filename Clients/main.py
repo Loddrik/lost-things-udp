@@ -25,9 +25,9 @@ if __name__ == "__main__":
         print("5. Obtener objetos del usuario actual.\n")
         print("--------------------------------------------------")
         print("PUBLIC SERVICES:")
-        print("6.Login")
-        print("7. Get things using a filter.")
-        print("8. Get all lost and found things.")
+        print("6. Iniciar sesión.")
+        print("7. Obtener objetos usando filtros.")
+        print("8. Obtener todos los objetos encontrados y perdidos.")
 
         option = input("Ingrese una opción:")
 
